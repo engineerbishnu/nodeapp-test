@@ -47,8 +47,15 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
       
-      - name: Run Docker container
-        run: docker run -d -p 3000:3000 hello-world-node
-        
-      - name: Verify deployment
-        run: curl -s http://localhost:3000 | grep "Hello World"
+    - name: Run Docker container
+      run: docker run -d -p 3000:3000 --name hello-world-node
+
+    - name: Wait for the application to start
+      run: sleep 15
+
+    - name: Verify application is running
+      run: curl -f http://localhost:3000 || exit 1
+
+    - name: Show Docker logs for debugging
+      if: failure()
+      run: docker logs hello-world-node
