@@ -33,7 +33,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
+
       - name: Debug Docker login
         run: echo "Login successful"
 
@@ -46,9 +46,9 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
-      
+
       - name: Run Docker container
-        run: docker run -d -p 3000:3000 --name hello-world-node
+        run: docker run -d -p 3000:3000 --name hello-world-node ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:${{ github.sha }}
 
       - name: Wait for the application to start
         run: sleep 15
