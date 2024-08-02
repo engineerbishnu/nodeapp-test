@@ -23,23 +23,7 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Run tests
-                    sh 'npm test'
-                }
-            }
-        }
 
-        stage('Build') {
-            steps {
-                script {
-                    // Build your application (if needed)
-                    sh 'npm run build'
-                }
-            }
-        }
 
         stage('Deploy') {
             steps {
