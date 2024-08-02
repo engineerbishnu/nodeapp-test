@@ -30,7 +30,7 @@ pipeline {
                 script {
                     // Deploy your application (example, replace with actual deployment commands)
                     // e.g., copying build artifacts to a server, deploying to cloud, etc.
-                    sh 'echo "Deploying application"'
+                    sh 'npm start'
                 }
             }
         }
