@@ -24,18 +24,31 @@ jobs:
           key: ${{ runner.os }}-docker-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-docker-
-
+            
       - name: Build Docker image
-        run: docker build . -t hello-world-node
+        run: docker build . -t hello-world-node:${{ github.sha }} -t hello-world-node:latest
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+      
+      - name: Debug Docker login
+        run: echo "Login successful"
+
       - name: Tag Docker image
-        run: docker tag hello-world-node ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
+        run: |
+          docker tag hello-world-node:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:${{ github.sha }}
+          docker tag hello-world-node:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-world-node:latest
+      
+      - name: Run Docker container
+        run: docker run -d -p 3000:3000 hello-world-node
+        
+      - name: Verify deployment
+        run: curl -s http://localhost:3000 | grep "Hello World"
