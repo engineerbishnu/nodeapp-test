@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-docker-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-docker-
-            
+
       - name: Build Docker image
         run: docker build . -t hello-world-node:${{ github.sha }} -t hello-world-node:latest
 
@@ -33,7 +33,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+    
       - name: Debug Docker login
         run: echo "Login successful"
 
