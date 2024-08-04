@@ -23,17 +23,26 @@ pipeline {
             }
         }
 
-
-
         stage('Deploy') {
             steps {
                 script {
-                    // Deploy your application (example, replace with actual deployment commands)
-                    // e.g., copying build artifacts to a server, deploying to cloud, etc.
-                    sh 'npm start'
+                    // Start npm in the background and get its PID
+                    sh '''
+                    npm start &
+                    NPM_PID=$!
+                    sleep 15
+                    kill $NPM_PID
+                    '''
                 }
             }
         }
+
+        // Add further stages as needed
+        // stage('NextStage') {
+        //     steps {
+        //         // Add further steps here
+        //     }
+        // }
     }
 
     post {
@@ -44,7 +53,6 @@ pipeline {
             echo 'Pipeline failed.'
         }
         always {
-            // Clean up or notify
             echo 'Pipeline finished.'
         }
     }
