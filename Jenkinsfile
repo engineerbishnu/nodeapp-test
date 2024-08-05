@@ -23,28 +23,42 @@ pipeline {
             }
         }
 
+#        stage('Deploy') {
+#            steps {
+#                script {
+#                    // Start npm in the background and get its PID
+#                    sh '''
+#                    npm start &
+#                    NPM_PID=$!
+#                    sleep 15
+#                    kill $NPM_PID
+#                    '''
+#                }
+#            }
+#        }
+#
+#       // Add further stages as needed
+#        // stage('NextStage') {
+#        //     steps {
+#        //         // Add further steps here
+#        //     }
+#        // }
+#    }
+
         stage('Deploy') {
             steps {
                 script {
-                    // Start npm in the background and get its PID
+                    // Start the Node.js app in the background
                     sh '''
-                    npm start &
-                    NPM_PID=$!
-                    sleep 15
-                    kill $NPM_PID
+                    nohup npm start > app.log 2>&1 &
+                    echo $! > nodeapp.pid
                     '''
+                    // Optionally, print the PID of the Node.js process
+                    sh 'cat nodeapp.pid'
                 }
             }
         }
-
-        // Add further stages as needed
-        // stage('NextStage') {
-        //     steps {
-        //         // Add further steps here
-        //     }
-        // }
-    }
-
+    
     post {
         success {
             echo 'Pipeline succeeded!'
