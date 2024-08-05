@@ -4,7 +4,6 @@ pipeline {
     environment {
         // Set environment variables if needed
         NODE_ENV = 'development'
-        PORT = '3000' // Make sure this matches the port your Node.js app is using
     }
 
     stages {
@@ -27,36 +26,23 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Start the Node.js app in the background
+                    // Start npm in the background and get its PID
                     sh '''
-                    nohup npm start > app.log 2>&1 &
-                    echo $! > nodeapp.pid
+                    npm start &
+                    NPM_PID=$!
+                    sleep 60
+                    kill $NPM_PID
                     '''
-                    // Optionally print the PID for reference
-                    sh 'cat nodeapp.pid'
-                }
-            }
-        }
-
-        stage('Print URL') {
-            steps {
-                script {
-                    // Print the URL where the Node.js app can be accessed
-                    def url = "http://${env.NODEJS_HOST}:${env.PORT}"
-                    echo "Your Node.js application is running at: ${url}"
                 }
             }
         }
 
         // Add further stages as needed
-        stage('NextStage') {
-            steps {
-                script {
-                    // Add further steps here
-                    echo 'Proceeding to the next stage...'
-                }
-            }
-        }
+        // stage('NextStage') {
+        //     steps {
+        //         // Add further steps here
+        //     }
+        // }
     }
     
     post {
