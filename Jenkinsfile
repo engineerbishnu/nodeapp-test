@@ -23,28 +23,6 @@ pipeline {
             }
         }
 
-#        stage('Deploy') {
-#            steps {
-#                script {
-#                    // Start npm in the background and get its PID
-#                    sh '''
-#                    npm start &
-#                    NPM_PID=$!
-#                    sleep 15
-#                    kill $NPM_PID
-#                    '''
-#                }
-#            }
-#        }
-#
-#       // Add further stages as needed
-#        // stage('NextStage') {
-#        //     steps {
-#        //         // Add further steps here
-#        //     }
-#        // }
-#    }
-
         stage('Deploy') {
             steps {
                 script {
