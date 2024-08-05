@@ -26,16 +26,24 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Start the Node.js app in the background
+                    // Start npm in the background and get its PID
                     sh '''
-                    nohup npm start > app.log 2>&1 &
-                    echo $! > nodeapp.pid
+                    npm start &
+                    NPM_PID=$!
+                    sleep 15
+                    kill $NPM_PID
                     '''
-                    // Optionally, print the PID of the Node.js process
-                    sh 'cat nodeapp.pid'
                 }
             }
         }
+
+        // Add further stages as needed
+        // stage('NextStage') {
+        //     steps {
+        //         // Add further steps here
+        //     }
+        // }
+    }
     
     post {
         success {
