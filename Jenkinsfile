@@ -26,7 +26,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Start npm in the background and save its PID
+                    // Start the Node.js app in the background
                     sh '''
                     nohup npm start > app.log 2>&1 &
                     echo $! > nodeapp.pid
